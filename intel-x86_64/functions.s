@@ -45,7 +45,8 @@ y:
 ;rsi - x
 ;rdx - y
 ;Set pixel of x,y to black
-;Void - only changes the bitmap
+;Returns 1 if operation ended succesfully,
+;Returns 0 if not
 global set_pixel
 
 set_pixel:
