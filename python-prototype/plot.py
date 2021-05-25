@@ -70,5 +70,6 @@ if __name__ == "__main__":
     x_lst = get_x_lst(new_pts)
     y_lst = get_y_lst(new_pts)
     plt.plot(x_lst, y_lst, markersize=3)
-    graph(function, range(-10, 10))
+    graph(function, range(-7, 1))
+    plt.savefig("output.png")
     plt.show()
