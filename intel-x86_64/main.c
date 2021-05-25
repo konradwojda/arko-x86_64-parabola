@@ -16,7 +16,7 @@ GtkImage* gtk_bitmap;
 
 
 
-#define OUTPUT_NAME "output.bmp"
+#define OUTPUT_FILE_NAME "output.bmp"
 
 #define BMP_HEADER_SIZE 54
 
@@ -24,7 +24,7 @@ GtkImage* gtk_bitmap;
 
 #define BMP_PLANES 1
 
-#define BMP_BPP 24
+#define BMP_BPP_TYPE 24
 
 #define BMP_HORIZONTAL_RES 500
 
@@ -37,8 +37,8 @@ double y(double, double, double, double);
 int set_pixel(unsigned char *, unsigned int, unsigned int);
 
 typedef struct {
-    unsigned char sig_0;
-    unsigned char sig_1;
+    unsigned char sig_b;
+    unsigned char sig_m;
     uint32_t size;
     uint32_t reserved;
     uint32_t pixel_offset;
@@ -57,13 +57,13 @@ typedef struct {
 
 void init_bmp_header(BmpHeader *header)
 {
-    header->sig_0 = 'B';
-    header->sig_1 = 'M';
+    header->sig_b = 'B';
+    header->sig_m = 'M';
     header->reserved = 0;
     header->pixel_offset = BMP_PIXEL_OFFSET;
     header->header_size = BMP_DIB_HEADER_SIZE;
     header->planes = BMP_PLANES;
-    header->bpp_type = BMP_BPP;
+    header->bpp_type = BMP_BPP_TYPE;
     header->compression = 0;
     header->image_size = 0;
     header->horizontal_res = BMP_HORIZONTAL_RES;
@@ -76,7 +76,7 @@ void write_bytes_to_bmp(unsigned char *buffer, size_t size)
 {
     FILE *file;
 
-    file = fopen(OUTPUT_NAME, "wb");
+    file = fopen(OUTPUT_FILE_NAME, "wb");
     if (file == NULL)
     {
         printf("Error");
@@ -88,7 +88,7 @@ void write_bytes_to_bmp(unsigned char *buffer, size_t size)
 
 
 
-unsigned char *generate_empty_bitmap(unsigned int width, unsigned int height, size_t *output_size)
+unsigned char *generate_white_bitmap(unsigned int width, unsigned int height, size_t *output_size)
 {
     unsigned int row_size = (width * 3 + 3) & ~3;
     *output_size = row_size * height + BMP_HEADER_SIZE;
@@ -131,7 +131,7 @@ void draw()
         return;
     }
     size_t bmp_size = 0;
-    unsigned char *bmp_buffer = generate_empty_bitmap(512, 512, &bmp_size);
+    unsigned char *bmp_buffer = generate_white_bitmap(512, 512, &bmp_size);
     printf("%d\n", sizeof(BmpHeader));
     printf("%d\n", bmp_size);
     for(int i = 0; i <= 512; i++)
@@ -147,30 +147,13 @@ void draw()
         colored = 0;
         colored |= set_pixel(bmp_buffer, xx+256, yy+256);
         colored |= set_pixel(bmp_buffer, 2*sym-xx+256, yy+256);
-        // xx = xx-256;
-        // yy = yy-256;
         xx = x(xx, S, A, B);
         yy = y(A, B, C, xx);
-        // xx = xx+256;
-        // yy = yy+256;
 
     } while (colored);
-
-
-    // for(int i = 0; i<500; i++)
-    // {
-    //     set_pixel(bmp_buffer, (int)xx, (int)yy);
-    //     set_pixel(bmp_buffer, 512-(int)xx, (int)yy);
-    //     xx=xx-256;
-    //     yy=yy-256;
-    //     xx = x(xx, 0.5, 0.01, 0.0);
-    //     yy = y(0.01, 0.0, 0.0, xx);
-    //     xx = xx+256;
-    //     yy = yy+256;
-    // }
     write_bytes_to_bmp(bmp_buffer, bmp_size);
     free(bmp_buffer);
-    gtk_image_set_from_file(gtk_bitmap, OUTPUT_NAME);
+    gtk_image_set_from_file(gtk_bitmap, OUTPUT_FILE_NAME);
 }
 
 int main(int argc, char* argv[])
