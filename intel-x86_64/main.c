@@ -1,5 +1,5 @@
-//gcc -m32 -O0 -fpack-struct -std=c99 main.c -o main
 #include "functions.h"
+#include "draw_bitmap.h"
 #include "math.h"
 #include <stdio.h>
 #include <stddef.h>
@@ -35,6 +35,7 @@ GtkImage* gtk_bitmap;
 double x(double, double, double, double);
 double y(double, double, double, double);
 int set_pixel(unsigned char *, unsigned int, unsigned int);
+void draw_bitmap(unsigned char* bitmap, double a, double b, double c, double s);
 
 typedef struct {
     unsigned char sig_b;
@@ -109,11 +110,6 @@ unsigned char *generate_white_bitmap(unsigned int width, unsigned int height, si
     return bitmap;
 }
 
-// double A = -0.01;
-// double B = 0.4;
-// double C = -15.0;
-// double S = 0.5;
-
 void exit_exit()
 {
     gtk_main_quit();
@@ -134,23 +130,7 @@ void draw()
     unsigned char *bmp_buffer = generate_white_bitmap(512, 512, &bmp_size);
     printf("%d\n", sizeof(BmpHeader));
     printf("%d\n", bmp_size);
-    for(int i = 0; i <= 512; i++)
-    {
-        set_pixel(bmp_buffer, i, 256);
-        set_pixel(bmp_buffer, 256, i);
-    }
-    double xx = (-B) / (2*A);
-    double yy = y(A, B, C, xx);
-    double sym = xx;
-    int colored;
-    do{
-        colored = 0;
-        colored |= set_pixel(bmp_buffer, xx+256, yy+256);
-        colored |= set_pixel(bmp_buffer, 2*sym-xx+256, yy+256);
-        xx = x(xx, S, A, B);
-        yy = y(A, B, C, xx);
-
-    } while (colored);
+    draw_bitmap(bmp_buffer, A, B, C, S);
     write_bytes_to_bmp(bmp_buffer, bmp_size);
     free(bmp_buffer);
     gtk_image_set_from_file(gtk_bitmap, OUTPUT_FILE_NAME);
