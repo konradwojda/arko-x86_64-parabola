@@ -1,4 +1,3 @@
-#include "functions.h"
 #include "draw_bitmap.h"
 #include "math.h"
 #include <stdio.h>
@@ -32,9 +31,6 @@ GtkImage* gtk_bitmap;
 
 #define BMP_DIB_HEADER_SIZE 40
 
-double x(double, double, double, double);
-double y(double, double, double, double);
-int set_pixel(unsigned char *, unsigned int, unsigned int);
 void draw_bitmap(unsigned char* bitmap, double a, double b, double c, double s);
 
 typedef struct {
@@ -122,10 +118,6 @@ void draw()
     double B = gtk_adjustment_get_value(param_b);
     double C = gtk_adjustment_get_value(param_c);
     double S = gtk_adjustment_get_value(param_s);
-    if (A == 0)
-    {
-        return;
-    }
     size_t bmp_size = 0;
     unsigned char *bmp_buffer = generate_white_bitmap(512, 512, &bmp_size);
     printf("%d\n", sizeof(BmpHeader));
