@@ -151,7 +151,9 @@ void draw()
 
     //Create an empty bitmap
     size_t bmp_size = 0;
-    unsigned char *bmp_buffer = generate_white_bitmap(512, 512, &bmp_size);
+
+    //width and height must be even
+    unsigned char *bmp_buffer = generate_white_bitmap(1024, 512, &bmp_size);
 
     //Debug prints
     // printf("%d\n", sizeof(BmpHeader));

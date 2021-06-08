@@ -20,7 +20,10 @@ draw_axis:
     mov r8, rbx                 ;move width to r8 to decrement
     mov r9, rcx                 ;move height to r8 to decrement
 draw_x:
-    mov rdx, 256                ;move y to rdx (512/2)
+
+    ;move height to rdx and divide by 2 to get y of axis
+    mov rdx, rcx
+    sar rdx, 1
 
     ;move width to r11 and calculate index of a pixel
     mov r11, rbx
@@ -43,7 +46,9 @@ draw_x:
     jnbe draw_x
 
 draw_y:
-    mov rdx, 256    ;move x to rdx(512/2)
+    ;move width to rdx and divide by 2 to get x of axis
+    mov rdx, rbx
+    sar rdx, 1
 
     ;move width to r11 and calculate index of a pixel
     mov r11, rbx
@@ -97,9 +102,14 @@ drawing_loop:
     cvtsd2si r14, xmm5 ;r14 = (int)x
     cvtsd2si r15, xmm6 ;r15 = (int)y
 
-    ;add offset to x and y
-    add r14, 256
-    add r15, 256
+    ;move width and height to rdx, divide by 2 to get offset value and add it to x and y
+    mov rdx, rbx
+    sar rdx, 1
+    add r14, rdx
+
+    mov rdx, rcx
+    sar rdx, 1
+    add r15, rdx
 
     ;if x / y > width / height do not color
     cmp r14, r8
@@ -137,9 +147,14 @@ end1:
     neg r14
     add r14, r12
 
-    ;add offset to x and y
-    add r14, 256
-    add r15, 256
+    ;move width and height to rdx, divide by 2 to get offset value and add it to x and y
+    mov rdx, rbx
+    sar rdx, 1
+    add r14, rdx
+
+    mov rdx, rcx
+    sar rdx, 1
+    add r15, rdx
 
     ;if x / y > width / height do not color
     cmp r14, r8
