@@ -153,7 +153,7 @@ void draw()
     size_t bmp_size = 0;
 
     //width and height must be even
-    unsigned char *bmp_buffer = generate_white_bitmap(1024, 512, &bmp_size);
+    unsigned char *bmp_buffer = generate_white_bitmap(640, 360, &bmp_size);
 
     //Debug prints
     // printf("%d\n", sizeof(BmpHeader));

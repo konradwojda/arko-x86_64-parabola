@@ -19,6 +19,8 @@ draw_bitmap:
 draw_axis:
     mov r8, rbx                 ;move width to r8 to decrement
     mov r9, rcx                 ;move height to r8 to decrement
+    dec r8
+    dec r9
 draw_x:
 
     ;move height to rdx and divide by 2 to get y of axis
@@ -43,7 +45,7 @@ draw_x:
     mov byte[r11+1], 0xA9
     mov byte[r11+2], 0xA9
     dec r8
-    jnbe draw_x
+    jns draw_x
 
 draw_y:
     ;move width to rdx and divide by 2 to get x of axis
@@ -69,7 +71,7 @@ draw_y:
     mov byte[r11+2], 0xA9
 
     dec r9
-    jnbe draw_y
+    jns draw_y
 
 draw_parabola:
     ;calculate starting point;
@@ -113,9 +115,10 @@ drawing_loop:
 
     ;if x / y > width / height do not color
     cmp r14, r8
-    ja end1
+    jae end1
+
     cmp r15, r9
-    ja end1
+    jae end1
 
     lea r8, [r8+r8*2]
     add r8, 3
